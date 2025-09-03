@@ -1,0 +1,7 @@
+Flask==3.0.3
+flask-pymongo==2.3.0
+pymongo==4.8.0
+python-dotenv==1.0.1
+qrcode==7.4.2
+Pillow==10.3.0
+opencv-python==4.10.0.84

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Record</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0d1b2a;
+      color: #e0e0e0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1 {
+      color: #f0f0f0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    /* Dark table styles */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: #1b263b;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    }
+
+    th, td {
+      padding: 1rem;
+      color: #e0e0e0;
+      border-bottom: 1px solid #32445a;
+    }
+
+    th {
+      background-color: #32445a;
+      text-align: left;
+      border-bottom: 1px solid #ffffff44;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #1f2d47;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:last-child th {
+      border-bottom: none;
+    }
+
+    /* Buttons */
+    .btn {
+      border-radius: 8px;
+      font-weight: 500;
+      padding: 0.65rem;
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: #1d3a6d;
+      border-color: #1d3a6d;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #102747;
+      border-color: #102747;
+    }
+
+    .btn-success {
+      background-color: #2a7a4c;
+      border-color: #2a7a4c;
+      color: #fff;
+    }
+
+    .btn-success:hover {
+      background-color: #1d4f33;
+      border-color: #1d4f33;
+    }
+
+    .btn-warning {
+      background-color: #d9a404;
+      border-color: #b37f00;
+      color: #000;
+    }
+
+    .btn-warning:hover {
+      background-color: #b37f00;
+      border-color: #8f5f00;
+    }
+
+    .btn-secondary {
+      background-color: #4f6781;
+      border-color: #32445a;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #32445a;
+      border-color: #1b263b;
+    }
+
+    .alert-success {
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background-color: #2a7a4c;
+      color: #e0e0e0;
+      border-color: #1d4f33;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      th, td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+      }
+      .btn {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body class="container py-5">
+
+  <h1>Record Details</h1>
+
+  <table>
+    <tr><th>Unique ID</th><td>{{ record.unique_id }}</td></tr>
+    <tr><th>Type</th><td>{{ record.type }}</td></tr>
+    <tr><th>Date of Manufacture</th><td>{{ record.DOM }}</td></tr>
+    <tr><th>Date of Installation</th><td>{{ record.DOI or "Not Installed" }}</td></tr>
+    <tr class="{% if expired %}table-danger{% endif %}"><th>Expiry Date</th><td>{{ record.expiry_date }}</td></tr>
+    <tr class="{% if warranty_over %}table-warning{% endif %}"><th>Warranty Date</th><td>{{ record.warrenty_date }}</td></tr>
+    <tr><th>Last Inspection</th><td>{{ record.last_inspection_date or "Not Inspected" }}</td></tr>
+    <tr><th>Next Inspection</th><td>{{ record.next_inspection_date or "Not Inspected" }}</td></tr>
+    <tr><th>Health</th><td>{{ record.health }}</td></tr>
+    <tr><th>Vendor</th><td>{{ record.metadata.vendor }}</td></tr>
+    <tr><th>Lot</th><td>{{ record.metadata.lot }}</td></tr>
+  </table>
+
+  {% if not record.DOI %}
+    <form action="{{ url_for('install', unique_id=record.unique_id) }}" method="POST">
+      <button class="btn btn-primary">Mark Installation Done</button>
+    </form>
+  {% else %}
+    <div class="alert-success">Installation Completed on {{ record.DOI }}</div>
+  {% endif %}
+
+  <a href="{{ url_for('inspect', unique_id=record.unique_id) }}" class="btn btn-warning">Inspect Now</a>
+  <a href="{{ url_for('home') }}" class="btn btn-secondary">Back</a>
+
+</body>
+</html>
